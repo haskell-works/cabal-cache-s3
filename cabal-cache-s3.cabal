@@ -1,0 +1,131 @@
+cabal-version:          2.2
+
+name:                   cabal-cache-s3
+version:                0.0.0.1
+synopsis:               cabal-cache plugin for s3
+description:            cabal-cache plugin for s3.
+homepage:               https://github.com/haskell-works/cabal-cache-s3
+license:                BSD-3-Clause
+license-file:           LICENSE
+author:                 John Ky
+maintainer:             newhoggy@gmail.com
+copyright:              John Ky 2021
+category:               Development
+extra-source-files:     README.md
+
+source-repository head
+  type: git
+  location: https://github.com/haskell-works/cabal-cache-s3
+
+common base                           { build-depends: base                           >= 4.7        && < 5      }
+
+common aeson                          { build-depends: aeson                          >= 1.4.2.0    && < 1.5    }
+common amazonka                       { build-depends: amazonka                       >= 1.6.1      && < 1.7    }
+common amazonka-core                  { build-depends: amazonka-core                  >= 1.6.1      && < 1.7    }
+common amazonka-s3                    { build-depends: amazonka-s3                    >= 1.6.1      && < 1.7    }
+common antiope-core                   { build-depends: antiope-core                   >= 7.4.4      && < 8      }
+common antiope-optparse-applicative   { build-depends: antiope-optparse-applicative   >= 7.4.4      && < 8      }
+common antiope-s3                     { build-depends: antiope-s3                     >= 7.4.4      && < 8      }
+common bytestring                     { build-depends: bytestring                     >= 0.10.8.2   && < 0.11   }
+common conduit-extra                  { build-depends: conduit-extra                  >= 1.3.1.1    && < 1.4    }
+common containers                     { build-depends: containers                     >= 0.6.0.1    && < 0.7    }
+common cryptonite                     { build-depends: cryptonite                     >= 0.25       && < 1      }
+common deepseq                        { build-depends: deepseq                        >= 1.4.4.0    && < 1.5    }
+common directory                      { build-depends: directory                      >= 1.3.3.0    && < 1.4    }
+common exceptions                     { build-depends: exceptions                     >= 0.10.1     && < 0.11   }
+common filepath                       { build-depends: filepath                       >= 1.3        && < 1.5    }
+common generic-lens                   { build-depends: generic-lens                   >= 1.1.0.0    && < 2.1    }
+common hedgehog                       { build-depends: hedgehog                       >= 1.0        && < 1.1    }
+common hspec                          { build-depends: hspec                          >= 2.4        && < 3      }
+common http-client                    { build-depends: http-client                    >= 0.5.14     && < 0.7    }
+common http-types                     { build-depends: http-types                     >= 0.12.3     && < 0.13   }
+common hw-hedgehog                    { build-depends: hw-hedgehog                    >= 0.1.0.3    && < 0.2    }
+common hw-hspec-hedgehog              { build-depends: hw-hspec-hedgehog              >= 0.1.0.4    && < 0.2    }
+common lens                           { build-depends: lens                           >= 4.17       && < 5      }
+common mtl                            { build-depends: mtl                            >= 2.2.2      && < 2.3    }
+common optparse-applicative           { build-depends: optparse-applicative           >= 0.14       && < 0.17   }
+common process                        { build-depends: process                        >= 1.6.5.0    && < 1.7    }
+common raw-strings-qq                 { build-depends: raw-strings-qq                 >= 1.1        && < 2      }
+common resourcet                      { build-depends: resourcet                      >= 1.2.2      && < 1.3    }
+common selective                      { build-depends: selective                      >= 0.1.0      && < 0.2    }
+common stm                            { build-depends: stm                            >= 2.5.0.0    && < 3      }
+common stringsearch                   { build-depends: stringsearch                   >= 0.3.6.6    && < 0.4    }
+common tar                            { build-depends: tar                            >= 0.5.1.0    && < 0.6    }
+common temporary                      { build-depends: temporary                      >= 1.3        && < 1.4    }
+common text                           { build-depends: text                           >= 1.2.3.1    && < 1.3    }
+common time                           { build-depends: time                           >= 1.4        && < 1.10   }
+common topograph                      { build-depends: topograph                      >= 1          && < 2      }
+common unliftio                       { build-depends: unliftio                       >= 0.2.10     && < 0.3    }
+common zlib                           { build-depends: zlib                           >= 0.6.2      && < 0.7    }
+
+common config
+  default-language:     Haskell2010
+  ghc-options:          -Wall
+                        -Wtabs
+                        -Wincomplete-uni-patterns
+                        -Wincomplete-record-updates
+                        -Wunused-packages
+
+library
+  import:               base, config
+                      , amazonka
+                      , amazonka-core
+                      , amazonka-s3
+                      , antiope-core
+                      , antiope-s3
+                      , bytestring
+                      , exceptions
+                      , filepath
+                      , generic-lens
+                      , http-types
+                      , lens
+                      , mtl
+                      , resourcet
+                      , text
+  other-modules:        Paths_cabal_cache_s3
+  autogen-modules:      Paths_cabal_cache_s3
+  hs-source-dirs:       src
+  exposed-modules:      HaskellWorks.CabalCache.S3.AppError
+                        HaskellWorks.CabalCache.S3.AWS.Env
+                        HaskellWorks.CabalCache.S3.Error
+                        HaskellWorks.CabalCache.S3.IO.Console
+                        HaskellWorks.CabalCache.S3.IO.Error
+                        HaskellWorks.CabalCache.S3.IO.Lazy
+                        HaskellWorks.CabalCache.S3.Location
+                        HaskellWorks.CabalCache.S3.Show
+
+executable cabal-cache-s3
+  import:               base, config
+                      , amazonka
+                      , amazonka-core
+                      , antiope-core
+                      , antiope-optparse-applicative
+                      , antiope-s3
+                      , bytestring
+                      , generic-lens
+                      , lens
+                      , optparse-applicative
+                      , text
+  build-depends:        cabal-cache-s3
+  main-is:              Main.hs
+  hs-source-dirs:       app
+  autogen-modules:      Paths_cabal_cache_s3
+  other-modules:        App.Commands
+                        App.Commands.Options.Parser
+                        App.Commands.Options.Types
+                        App.Commands.Get
+                        App.Commands.Head
+                        App.Commands.Put
+                        App.Commands.Version
+                        Paths_cabal_cache_s3
+  ghc-options:          -threaded -rtsopts -with-rtsopts=-N
+
+test-suite cabal-cache-s3-test
+  import:               base, config
+                      , hspec
+
+  type:                 exitcode-stdio-1.0
+  main-is:              Spec.hs
+  hs-source-dirs:       test
+  ghc-options:          -threaded -rtsopts -with-rtsopts=-N
+  build-tool-depends:   hspec-discover:hspec-discover
