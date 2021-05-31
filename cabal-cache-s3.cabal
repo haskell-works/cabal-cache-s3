@@ -43,6 +43,7 @@ common hw-hedgehog                    { build-depends: hw-hedgehog              
 common hw-hspec-hedgehog              { build-depends: hw-hspec-hedgehog              >= 0.1.0.4    && < 0.2    }
 common lens                           { build-depends: lens                           >= 4.17       && < 5      }
 common mtl                            { build-depends: mtl                            >= 2.2.2      && < 2.3    }
+common network-uri                    { build-depends: network-uri                    >= 2.6.4.1    && < 2.7    }
 common optparse-applicative           { build-depends: optparse-applicative           >= 0.14       && < 0.17   }
 common process                        { build-depends: process                        >= 1.6.5.0    && < 1.7    }
 common raw-strings-qq                 { build-depends: raw-strings-qq                 >= 1.1        && < 2      }
@@ -80,6 +81,7 @@ library
                       , http-types
                       , lens
                       , mtl
+                      , network-uri
                       , resourcet
                       , text
   other-modules:        Paths_cabal_cache_s3
@@ -93,6 +95,7 @@ library
                         HaskellWorks.CabalCache.S3.IO.Lazy
                         HaskellWorks.CabalCache.S3.Location
                         HaskellWorks.CabalCache.S3.Show
+                        HaskellWorks.CabalCache.S3.Uri
 
 executable cabal-cache-s3
   import:               base, config
@@ -100,7 +103,6 @@ executable cabal-cache-s3
                       , amazonka-core
                       , antiope-core
                       , antiope-optparse-applicative
-                      , antiope-s3
                       , bytestring
                       , generic-lens
                       , lens

@@ -17,7 +17,7 @@ import Control.Applicative
 import Control.Lens
 import Data.Generics.Product.Any           (the)
 import HaskellWorks.CabalCache.S3.IO.Lazy  (headS3Uri)
-import HaskellWorks.CabalCache.S3.Location (toS3Uri, (</>))
+import HaskellWorks.CabalCache.S3.Uri
 import Options.Applicative                 hiding (columns)
 
 import qualified App.Commands.Options.Types         as Z
@@ -54,13 +54,18 @@ optsHead = HeadOptions
       <> showDefault <> value Oregon
       <> help "The AWS region in which to operate"
       )
-  <*> option (maybeReader (toS3Uri . T.pack))
+  <*> option (maybeReader (toUri . T.pack))
       (   long "uri"
       <>  help "Base URI to sync to"
       <>  metavar "S3_URI"
       )
   <*> strOption
       (   long "sub-key"
+      <>  help "Sub key for stored object"
+      <>  metavar "DIRECTORY"
+      )
+  <*> strOption
+      (   long "config-file"
       <>  help "Sub key for stored object"
       <>  metavar "DIRECTORY"
       )
