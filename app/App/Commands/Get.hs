@@ -18,19 +18,18 @@ import Control.Lens
 import Control.Monad.IO.Class
 import Data.Generics.Product.Any           (the)
 import HaskellWorks.CabalCache.S3.IO.Lazy  (getS3Uri)
-import HaskellWorks.CabalCache.S3.Location (toS3Uri)
 import HaskellWorks.CabalCache.S3.Uri
 import Network.AWS.Data                    (toText)
 import Options.Applicative                 hiding (columns)
 
-import qualified App.Commands.Options.Types         as Z
-import qualified Data.ByteString.Lazy               as LBS
-import qualified Data.Text                          as T
-import qualified Data.Text.IO                       as T
-import qualified HaskellWorks.CabalCache.S3.AWS.Env as AWS
-import qualified System.Exit                        as IO
-import qualified System.IO                          as IO
-import qualified System.IO.Unsafe                   as IO
+import qualified App.Commands.Options.Types            as Z
+import qualified Data.ByteString.Lazy                  as LBS
+import qualified Data.Text                             as T
+import qualified HaskellWorks.CabalCache.S3.AWS.Env    as AWS
+import qualified HaskellWorks.CabalCache.S3.IO.Console as CIO
+import qualified System.Exit                           as IO
+import qualified System.IO                             as IO
+import qualified System.IO.Unsafe                      as IO
 
 {- HLINT ignore "Monoid law, left identity" -}
 {- HLINT ignore "Reduce duplication"        -}
@@ -43,7 +42,7 @@ runGet opts = do
   let path        = opts ^. the @"path"
   let configPath  = opts ^. the @"configPath"
 
-  T.hPutStrLn IO.stderr $ "Location: " <> toText (s3Uri </> path)
+  CIO.hPutStrLn IO.stderr $ "Downloading: " <> toText (s3Uri </> path)
 
   envAws <- IO.unsafeInterleaveIO $ mkEnv (opts ^. the @"region") (AWS.awsLogger awsLogLevel)
   runResAws envAws $ do
@@ -52,7 +51,7 @@ runGet opts = do
     case result of
       Right contents -> liftIO $ LBS.hPut IO.stdout contents
       Left e         -> do
-        liftIO $ IO.hPutStrLn IO.stderr $ "Error: " <> show e
+        liftIO $ CIO.hPutStrLn IO.stderr $ T.pack $ "Error: " <> show e
         liftIO IO.exitFailure
 
 optsGet :: Parser GetOptions

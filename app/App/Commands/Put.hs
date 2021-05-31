@@ -18,14 +18,16 @@ import Control.Lens
 import Data.Generics.Product.Any           (the)
 import HaskellWorks.CabalCache.S3.IO.Lazy  (putS3Uri)
 import HaskellWorks.CabalCache.S3.Uri
+import Network.AWS.Data                    (toText)
 import Options.Applicative                 hiding (columns)
 
-import qualified App.Commands.Options.Types         as Z
-import qualified Data.ByteString.Lazy               as LBS
-import qualified Data.Text                          as T
-import qualified HaskellWorks.CabalCache.S3.AWS.Env as AWS
-import qualified System.Exit                        as IO
-import qualified System.IO                          as IO
+import qualified App.Commands.Options.Types            as Z
+import qualified Data.ByteString.Lazy                  as LBS
+import qualified Data.Text                             as T
+import qualified HaskellWorks.CabalCache.S3.AWS.Env    as AWS
+import qualified HaskellWorks.CabalCache.S3.IO.Console as CIO
+import qualified System.Exit                           as IO
+import qualified System.IO                             as IO
 
 {- HLINT ignore "Monoid law, left identity" -}
 {- HLINT ignore "Reduce duplication"        -}
@@ -37,6 +39,8 @@ runPut opts = do
   let s3Uri       = opts ^. the @"baseUri"
   let path        = opts ^. the @"path"
 
+  CIO.hPutStrLn IO.stderr $ "Downloading: " <> toText (s3Uri </> path)
+
   envAws    <- mkEnv (opts ^. the @"region") (AWS.awsLogger awsLogLevel)
   contents  <- LBS.hGetContents IO.stdin
   result    <- runResAws envAws $ putS3Uri envAws (s3Uri </> path) contents
@@ -44,7 +48,7 @@ runPut opts = do
   case result of
     Right _ -> return ()
     Left e  -> do
-      IO.hPutStrLn IO.stderr $ "Error: " <> show e
+      CIO.hPutStrLn IO.stderr $ T.pack $ "Error: " <> show e
       IO.exitFailure
 
 optsPut :: Parser PutOptions
