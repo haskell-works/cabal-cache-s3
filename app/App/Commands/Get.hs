@@ -25,6 +25,7 @@ import Options.Applicative                 hiding (columns)
 import qualified App.Commands.Options.Types            as Z
 import qualified Data.ByteString.Lazy                  as LBS
 import qualified Data.Text                             as T
+import qualified Data.Yaml                             as Y
 import qualified HaskellWorks.CabalCache.S3.AWS.Env    as AWS
 import qualified HaskellWorks.CabalCache.S3.IO.Console as CIO
 import qualified System.Exit                           as IO
@@ -41,6 +42,8 @@ runGet opts = do
   let s3Uri       = opts ^. the @"baseUri"
   let path        = opts ^. the @"path"
   let configPath  = opts ^. the @"configPath"
+
+  configResult <- Y.decodeFileEither configPath
 
   CIO.hPutStrLn IO.stderr $ "Downloading: " <> toText (s3Uri </> path)
 
